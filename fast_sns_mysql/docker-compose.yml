@@ -5,6 +5,8 @@ services:
     image: mysql:8
     cap_add:
       - SYS_NICE
+    volumes:
+      - ./dump/:/docker-entrypoint-initdb.d/
     restart: always
     container_name: fastcamplus-mysql
     environment:
@@ -14,6 +16,6 @@ services:
       MYSQL_PASSWORD: password
       TZ: Asia/Seoul
     ports:
-      - '3306:3306'
+      - '13306:3306'
     expose:
-      - '3306'
+      - '13306'
