@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.util.Assert;
 
 @Getter
+@ToString
 public class Member {
     final private Long id;
-    private String nickname;
+    final private String nickname;
     final private String email;
     final private LocalDate birthday;
     final private LocalDateTime createdAt;
@@ -26,8 +28,13 @@ public class Member {
         this.nickname = Objects.requireNonNull(nickname);
         this.createdAt = createdAt == null ?  LocalDateTime.now() : createdAt;
     }
+    public Member changeNicName(String nickname){
+        Objects.requireNonNull(nickname);
+        validateNickname(nickname);
+        return new Member(this.getId(), nickname, this.getEmail(), this.getBirthday(), this.getCreatedAt());
+    }
 
-    void validateNickname(String nickname) {
+    private void validateNickname(String nickname) {
         Assert.isTrue(nickname.length() <= NAME_MAX_LENGTH, "최대 길이를 초과했습니다.");
     }
 }
