@@ -27,4 +27,11 @@ public class MemberWriteService {
                 .build();
         return memberCommonService.toDto(memberRepository.save(member));
     }
+
+    public MemberDto changeNicname(Long memberId, String nickname) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member changeMember = member.changeNicName(nickname);
+        memberRepository.save(changeMember);
+        return memberCommonService.toDto(changeMember);
+    }
 }
