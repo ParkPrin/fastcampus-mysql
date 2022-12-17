@@ -2,7 +2,6 @@ package com.example.fastcampusmysql.domain.member.service;
 
 import com.example.fastcampusmysql.domain.member.dto.MemberDto;
 import com.example.fastcampusmysql.domain.member.dto.MemberNicknameHistoryDto;
-import com.example.fastcampusmysql.domain.member.entity.MemberNicknameHistory;
 import com.example.fastcampusmysql.domain.member.repository.MemberNicnameHistoryRepository;
 import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
 import java.util.List;
@@ -23,6 +22,14 @@ public class MemberReadService {
     public List<MemberNicknameHistoryDto> getNicknameHistories(Long memberId){
         return memberNicnameHistoryRepository
                 .findAllByMemberId(memberId)
+                .stream()
+                .map(memberCommonService::toDto)
+                .toList();
+    }
+
+    public List<MemberDto> getMembers(List<Long> ids){
+        var members = memberRepository.findAllByIdIn(ids);
+        return members
                 .stream()
                 .map(memberCommonService::toDto)
                 .toList();

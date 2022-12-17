@@ -4,6 +4,7 @@ import com.example.fastcampusmysql.domain.member.entity.Member;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,6 +39,15 @@ public class MemberRepository {
         var param = new MapSqlParameterSource()
                 .addValue("id", id);
         return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql,param, rowMapper));
+    }
+
+    public List<Member> findAllByIdIn(List<Long> ids) {
+        if (ids.isEmpty()){
+            return List.of();
+        }
+        var sql = String.format("SELECT * FROM %s WHERE id in (:ids)", TABLE);
+        var params = new MapSqlParameterSource().addValue("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
     }
 
     public Member save(Member member) {
