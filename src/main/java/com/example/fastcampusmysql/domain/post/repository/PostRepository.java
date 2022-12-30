@@ -35,6 +35,19 @@ public class PostRepository {
 		throw new UnsupportedOperationException("Post는 갱신을 지원하지 않습니다");
 	}
 
+	public void bulkInsert(List<Post> posts) {
+		var sql = String.format("""
+            INSERT INTO `%s` (memberId, contents, createdDate, createdAt)
+            VALUES (:memberId, :contents, :createdDate, :createdAt)
+				""", TABLE);
+
+		SqlParameterSource[] params = posts
+				.stream()
+				.map(BeanPropertySqlParameterSource::new)
+				.toArray(SqlParameterSource[]::new);
+		namedParameterJdbcTemplate.batchUpdate(sql, params);
+	}
+
 	public List<DailyPostCount> groupByCreateDate(DailyPostCountRequest request) {
 		var sql = String.format("""
 								SELECT createdDate, memberId, count(id) as count
